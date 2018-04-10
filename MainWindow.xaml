@@ -1,0 +1,199 @@
+﻿<Window x:Class="ASN.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ASN"
+        mc:Ignorable="d"
+        Title="Advanced Sticky Notes" Height="350" Width="525" ShowInTaskbar="False" Background="{x:Null}" WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResizeWithGrip">
+    <Window.Resources>
+        <Storyboard x:Key="hideAnimation">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="grid">
+                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="showAnimation">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="grid">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD"/>
+        <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1"/>
+        <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFC4E5F6"/>
+        <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FF2C628B"/>
+        <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
+        <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
+        <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
+        <Style x:Key="btn_empty_style" TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true" CornerRadius="999">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsDefaulted" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}"/>
+                                <Setter Property="Background" TargetName="border" Value="#360068FF"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}"/>
+                                <Setter Property="Background" TargetName="border" Value="#00C4E5F6"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                                <Setter Property="Background" TargetName="border" Value="#7FF4F4F4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="btn_close_style" TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true" CornerRadius="999">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsDefaulted" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}"/>
+                                <Setter Property="Background" TargetName="border" Value="#5E0068FF"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Storyboard x:Key="btn_closeMouseEnter">
+            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="button">
+                <EasingColorKeyFrame KeyTime="0" Value="Black"/>
+                <EasingColorKeyFrame KeyTime="0:0:0.1" Value="Red"/>
+            </ColorAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="btn_closeMouseLeave">
+            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="button">
+                <EasingColorKeyFrame KeyTime="0" Value="Red"/>
+                <EasingColorKeyFrame KeyTime="0:0:0.1" Value="Black"/>
+            </ColorAnimationUsingKeyFrames>
+        </Storyboard>
+    </Window.Resources>
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="UIElement.MouseEnter" SourceName="grid">
+            <BeginStoryboard Storyboard="{StaticResource showAnimation}"/>
+        </EventTrigger>
+        <EventTrigger RoutedEvent="UIElement.MouseLeave" SourceName="grid">
+            <BeginStoryboard x:Name="hideAnimation_BeginStoryboard" Storyboard="{StaticResource hideAnimation}"/>
+        </EventTrigger>
+        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+            <BeginStoryboard x:Name="hideAnimation_BeginStoryboard1" Storyboard="{StaticResource hideAnimation}"/>
+        </EventTrigger>
+        <EventTrigger RoutedEvent="UIElement.MouseEnter" SourceName="button">
+            <BeginStoryboard x:Name="btn_closeMouseEnter_BeginStoryboard" Storyboard="{StaticResource btn_closeMouseEnter}"/>
+        </EventTrigger>
+        <EventTrigger RoutedEvent="UIElement.MouseLeave" SourceName="button">
+            <BeginStoryboard x:Name="btn_closeMouseLeave_BeginStoryboard" Storyboard="{StaticResource btn_closeMouseLeave}"/>
+        </EventTrigger>
+    </Window.Triggers>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#00000000" Offset="0"/>
+                    <GradientStop Color="#CCBCCBFF" Offset="1"/>
+                    <GradientStop Color="#684D5368" Offset="0.311"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+        </Grid>
+
+        <Grid x:Name="grid">
+            <Grid.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#CC6A8BFF" Offset="0.996"/>
+                    <GradientStop Color="#CC6A8BFF"/>
+                    <GradientStop Color="#CCC2D0FF" Offset="0.627"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+            <Path Data="M5.5958862,6.1353388 C4.4300537,7.5734491 3.3733518,9.58111 2.4257813,12.158319 L6.8730469,13.025964 C6.7100825,11.05758 6.2843623,8.760705 5.5958862,6.1353388 z M4.4478149,2.7427607 C7.6860347,6.0317011 9.7424927,10.300898 10.617188,15.550347 L6.890625,16.33065 C6.9257808,15.806787 6.9433589,15.297021 6.9433594,14.801354 C6.9433589,14.513879 6.9396968,14.256066 6.932373,14.027917 L1.6638794,14.697259 L1.4015808,15.576989 C1.3686218,15.786096 1.2892456,16.154503 1.1634523,16.682213 L0.79293823,16.617668 C0.70962524,11.579889 1.8325195,7.0327387 4.1616211,2.9762201 z M15.239974,5.4849482 C15.286849,6.0928583 15.310287,6.7315302 15.310287,7.4009638 C15.310287,9.2065668 15.140365,10.940942 14.800521,12.604089 C16.641096,11.902795 18.492659,10.869348 20.355209,9.503747 C18.958481,8.0218754 17.253401,6.6822748 15.239974,5.4849482 z M14.966414,3.0064325 C15.0045,3.3312626 15.053573,3.6891422 15.113631,4.0800714 C17.948835,4.7573786 20.645248,5.9189081 23.202866,7.5646601 C23.052534,7.7807245 22.850843,7.9923034 22.597794,8.1993952 C20.247269,11.725274 17.357588,14.486962 13.928756,16.484459 C13.840316,16.534447 13.767898,16.570702 13.711501,16.593224 L13.315719,16.734947 C13.154586,16.149742 13.011764,15.570764 12.887252,14.99801 L12.532943,13.192407 C12.989608,13.084374 13.294295,13.009118 13.447005,12.966638 C13.29576,9.9909916 12.63951,7.1709833 11.478255,4.5066156 L12.057235,4.2006464 C12.221297,4.1303339 12.35057,4.1137629 12.445052,4.1509333 C12.059249,4.0639582 11.643233,3.9341364 11.197005,3.7614679 L11.197005,3.4458857 C11.957076,3.5202274 12.623031,3.6081181 13.194869,3.7095575 C13.632125,3.5063114 14.22264,3.2719364 14.966414,3.0064325 z M23.448568,3.3404169 L23.812765,3.3404169 C24.766745,7.0973749 26.138937,10.073938 27.929342,12.270104 C28.340597,10.42367 28.546225,8.4607792 28.546225,6.3814325 C28.546225,5.4684687 28.49935,4.4547968 28.4056,3.3404169 C29.539022,3.5396366 30.792929,3.749567 32.16732,3.9702082 C31.493307,9.1156549 29.762411,13.335412 26.97463,16.629478 L26.678274,16.398491 C24.560476,12.61242 23.483908,8.2597284 23.448568,3.3404169 z M38.219219,6.1353388 C37.053387,7.5734491 35.996685,9.58111 35.049114,12.158319 L39.49638,13.025964 C39.333416,11.05758 38.907696,8.760705 38.219219,6.1353388 z M37.071148,2.7427607 C40.309368,6.0317011 42.365826,10.300898 43.24052,15.550347 L39.513958,16.33065 C39.549114,15.806787 39.566692,15.297021 39.566692,14.801354 C39.566692,14.513879 39.56303,14.256066 39.555706,14.027917 L34.287212,14.697259 L34.024914,15.576989 C33.991955,15.786096 33.912579,16.154503 33.786785,16.682213 L33.416271,16.617668 C33.332958,11.579889 34.455853,7.0327387 36.784954,2.9762201 z M54.173855,2.795495 C54.173855,6.9745111 53.47073,10.813227 52.06448,14.311639 C52.134792,14.759698 52.234402,15.39663 52.363308,16.222435 L50.728542,16.24276 C50.603664,16.24276 49.994289,16.260338 48.900417,16.295494 C48.97073,15.33767 49.005886,14.464623 49.005886,13.676354 C49.005886,11.038355 48.68362,8.4426517 48.039089,5.889245 C48.050808,6.1785517 48.056667,6.4715204 48.056667,6.7681513 C48.056667,10.339074 47.332211,13.772668 45.883297,17.068932 L45.542995,17.068932 C45.718777,15.671655 45.806667,14.341577 45.806667,13.078698 C45.806667,10.197351 45.302761,7.403161 44.294949,4.6961298 L47.833096,3.4634638 C47.885098,3.850915 47.933804,4.2886286 47.979214,4.7766047 C49.648952,7.0537043 50.791897,9.6159916 51.408047,12.463464 C51.435513,11.632165 51.449245,10.74154 51.449245,9.7915888 C51.449245,7.7860346 51.21487,5.7708673 50.74612,3.7460871 C51.298733,3.5847721 51.849697,3.4229984 52.399014,3.260766 z M64.240501,2.6372919 C64.379112,3.5372553 64.550499,4.8808832 64.754662,6.6681757 C62.473167,7.0462885 60.29348,7.9392028 58.215599,9.3469172 C60.218956,12.407891 62.539268,14.68673 65.176537,16.183434 L65.176537,16.471275 C61.347618,15.65426 58.001915,13.926202 55.139427,11.287103 C55.301476,11.123956 55.478355,10.951745 55.670067,10.770471 C58.376732,6.8754511 61.233543,4.1643915 64.240501,2.6372919 z M73.895828,2.0747919 L74.465469,3.9441156 C74.621292,4.4895868 74.794235,5.1153498 74.984299,5.8214045 C73.686996,6.2885065 72.444809,6.5220575 71.257736,6.5220575 C70.474045,6.5220575 69.782639,6.4283075 69.183517,6.2408075 C69.34758,7.1980829 69.429611,8.1180058 69.429611,9.0005732 L74.333908,7.6822138 L73.69725,11.356042 L69.377151,10.389245 C69.292007,11.653222 69.057541,12.901269 68.673752,14.133386 C69.977097,13.195886 71.436081,12.727136 73.050705,12.727136 C73.669785,12.727136 74.355331,12.812188 75.107346,12.982293 C74.988144,13.885186 74.790207,15.177087 74.513535,16.857994 C72.805893,15.744714 71.081955,15.188073 69.341721,15.188073 C68.951706,15.188073 68.572632,15.217278 68.204498,15.275689 C67.836365,15.3341 67.436142,15.404504 67.00383,15.486901 L67.00383,15.196862 C67.302658,14.925134 67.631424,14.667871 67.990128,14.425073 C68.024002,12.854211 67.880447,11.389001 67.559464,10.029443 L66.951096,9.9003534 L66.951096,9.6061945 L67.460861,9.4762812 C67.162582,8.4627934 66.734848,7.3398066 66.177658,6.1073236 C66.513107,5.9278803 66.917404,5.7694025 67.390549,5.6318903 C66.887192,5.515069 66.34227,5.2700739 65.755783,4.8969049 L65.755783,4.6060419 C66.21904,4.6411982 66.629196,4.6587763 66.986252,4.6587763 C69.451584,4.6587763 71.754776,3.7974482 73.895828,2.0747919 z M80.186638,5.4849482 C80.233513,6.0928583 80.25695,6.7315302 80.25695,7.4009638 C80.25695,9.2065668 80.087029,10.940942 79.747185,12.604089 C81.587761,11.902795 83.439323,10.869348 85.301872,9.503747 C83.905144,8.0218754 82.200066,6.6822748 80.186638,5.4849482 z M79.913078,3.0064325 C79.951164,3.3312626 80.000237,3.6891422 80.060295,4.0800714 C82.8955,4.7573786 85.591911,5.9189081 88.149529,7.5646601 C87.999199,7.7807245 87.797508,7.9923034 87.544456,8.1993952 C85.193932,11.725274 82.304253,14.486962 78.87542,16.484459 C78.78698,16.534447 78.714561,16.570702 78.658165,16.593224 L78.262383,16.734947 C78.10125,16.149742 77.958427,15.570764 77.833916,14.99801 L77.479607,13.192407 C77.936272,13.084374 78.240959,13.009118 78.393669,12.966638 C78.242424,9.9909916 77.586174,7.1709833 76.424919,4.5066156 L77.003899,4.2006464 C77.167961,4.1303339 77.297234,4.1137629 77.391716,4.1509333 C77.005913,4.0639582 76.589897,3.9341364 76.143669,3.7614679 L76.143669,3.4458857 C76.90374,3.5202274 77.569695,3.6081181 78.141533,3.7095575 C78.578789,3.5063114 79.169304,3.2719364 79.913078,3.0064325 z M104.10207,2.8658075 C104.16689,3.2970219 104.1993,3.6661625 104.1993,3.9732294 C104.1993,5.7535639 103.44884,7.3941889 101.94792,8.8951044 L101.66805,8.8951044 C101.88045,8.1646976 102.00935,7.4989252 102.05476,6.89779 C102.10164,6.3098383 102.0457,5.7334223 101.88695,5.1685419 C100.34355,5.2604609 98.876053,5.736352 97.484451,6.5962152 C100.23689,7.6829462 102.45174,9.674036 104.12898,12.569482 C103.87465,12.783166 103.53481,13.032922 103.10945,13.318749 C103.31306,14.047326 103.49471,14.688012 103.65437,15.240808 C102.44807,15.662683 101.28792,15.87362 100.1739,15.87362 C99.14357,15.87362 98.211929,15.703698 97.378983,15.363854 C97.424576,15.351586 97.506607,15.521508 97.625076,15.87362 L94.542038,15.87362 C94.523178,15.588891 94.513748,15.360375 94.513748,15.188073 C94.513748,13.224816 95.371231,11.50216 97.086197,10.020104 L97.378983,10.020104 C97.003983,11.035424 96.816483,11.931909 96.816483,12.709558 C96.816483,13.20321 96.876541,13.660241 96.996658,14.080651 C97.993851,14.013635 98.947464,13.771844 99.857498,13.355279 C99.211868,11.237298 98.139603,9.3078241 96.640701,7.5668573 C96.114273,7.133996 95.428726,6.599328 94.584061,5.9628534 L94.584061,5.6783075 L95.726639,5.9595575 C95.624832,5.7932978 95.527054,5.540246 95.433304,5.2004023 L95.146561,4.0385981 C96.346085,3.6083012 97.500381,3.3931522 98.609451,3.3931513 C99.659744,3.3931522 100.62654,3.5689335 101.50984,3.920495 C101.33699,3.7231083 101.18465,3.4563236 101.05281,3.120141 C101.44759,3.0827885 101.94426,3.0376987 102.54283,2.9848719 C103.1414,2.9320469 103.66115,2.8923588 104.10207,2.8658075 z M105.94647,2.8833857 C107.75592,3.5775385 109.4892,3.9475946 111.1463,3.9935541 C112.81036,4.0400629 114.54959,3.9102411 116.36398,3.6040888 L116.36398,3.898797 C114.76474,4.7597589 113.2413,5.3907404 111.79367,5.7917414 C111.79367,6.1145563 111.79367,6.4751825 111.79367,6.87362 C111.79367,10.162377 111.09897,13.437768 109.70956,16.699791 L109.35031,16.699791 C109.54953,14.668786 109.60318,12.91784 109.51126,11.446954 C109.39334,9.7241154 109.03116,8.047327 108.42471,6.4165888 C107.77927,6.49862 107.08585,6.5396357 106.34445,6.5396357 C105.93869,6.5396357 105.48752,6.5236139 104.99094,6.4915705 C105.14493,5.7776423 105.29324,5.1628656 105.43588,4.6472406 z M119.02818,3.076745 C119.13969,4.1405878 119.19544,5.1249628 119.19544,6.02987 C119.19544,7.394372 119.09483,8.7394657 118.89359,10.065148 C118.54075,12.428674 117.9658,14.634362 117.16874,16.682213 L116.80482,16.682213 C116.91029,15.440209 116.96302,14.262475 116.96302,13.149011 C116.96302,9.9399052 116.46497,7.0180902 115.46888,4.3835688 C116.18372,4.1067133 117.37016,3.6711054 119.02818,3.076745 z M129.4205,2.6372919 C129.55911,3.5372553 129.7305,4.8808832 129.93466,6.6681757 C127.65317,7.0462885 125.47348,7.9392028 123.3956,9.3469172 C125.39896,12.407891 127.71927,14.68673 130.35654,16.183434 L130.35654,16.471275 C126.52762,15.65426 123.18192,13.926202 120.31943,11.287103 C120.48148,11.123956 120.65836,10.951745 120.85007,10.770471 C123.55673,6.8754511 126.41354,4.1643915 129.4205,2.6372919 z M137.99586,2.6724482 L139.73802,3.1025629 C140.20604,3.2376957 140.77586,3.3922367 141.44749,3.566186 C139.82335,6.0954218 137.93663,8.1764164 135.78734,9.8091669 C136.89842,9.7760258 137.83775,9.7291508 138.60533,9.6685419 C139.08562,11.4703 139.62065,12.93789 140.21043,14.071313 C140.90495,15.425744 141.83879,16.641563 143.01195,17.718773 L143.01195,17.982994 C139.34361,16.009668 136.62816,13.630761 134.86559,10.846276 C134.58617,12.73739 133.97551,14.747155 133.03362,16.875572 L132.71117,16.875572 C132.94554,15.060815 133.03737,13.431909 132.98665,11.988854 C132.38991,12.492211 131.65941,12.943383 130.79515,13.34237 L130.79515,13.074029 C131.5197,12.397637 132.23454,11.675103 132.93968,10.906426 C132.76518,8.773798 132.27299,6.6213923 131.46312,4.4492121 C132.01299,4.2406549 132.58372,4.0270624 133.17534,3.8084345 L135.01884,3.1997919 C135.16789,4.4114008 135.24242,5.5422602 135.24242,6.59237 C135.24242,7.2943964 135.21312,7.9389281 135.15453,8.5259638 C136.24181,6.7767572 137.18892,4.8255854 137.99586,2.6724482 z M148.82764,2.8306513 C149.7168,2.9035282 150.99524,3.0044193 152.66296,3.1333246 C151.6427,5.6966181 150.47083,7.9468017 149.14734,9.8838739 C149.63184,10.544702 150.24121,11.226129 150.97546,11.928155 L150.81644,12.182214 C150.69467,12.160058 150.25861,11.904809 149.50824,11.416467 C149.10925,11.162499 148.78937,10.925561 148.54858,10.705651 C146.57635,13.533898 144.33899,16.082727 141.83649,18.352135 L141.58875,18.22744 C142.16809,17.305504 143.12061,15.844323 144.44629,13.843896 C145.56415,12.143945 146.38116,10.706017 146.89734,9.5301142 C144.98883,8.0127201 143.4068,6.1828547 142.15125,4.0405207 C143.17517,3.9974909 144.64835,3.9223261 146.57077,3.8150263 C146.99045,5.4402704 147.36737,6.700036 147.70154,7.5943232 C148.13055,6.1492548 148.50592,4.5613642 148.82764,2.8306513 z M168.53719,2.795495 C168.53719,6.9745111 167.83406,10.813227 166.42781,14.311639 C166.49812,14.759698 166.59773,15.39663 166.72664,16.222435 L165.09187,16.24276 C164.967,16.24276 164.35762,16.260338 163.26375,16.295494 C163.33406,15.33767 163.36922,14.464623 163.36922,13.676354 C163.36922,11.038355 163.04695,8.4426517 162.40242,5.889245 C162.41414,6.1785517 162.42,6.4715204 162.42,6.7681513 C162.42,10.339074 161.69554,13.772668 160.24663,17.068932 L159.90633,17.068932 C160.08211,15.671655 160.17,14.341577 160.17,13.078698 C160.17,10.197351 159.66609,7.403161 158.65828,4.6961298 L162.19643,3.4634638 C162.24843,3.850915 162.29713,4.2886286 162.34254,4.7766047 C164.01228,7.0537043 165.15523,9.6159916 165.77138,12.463464 C165.79884,11.632165 165.81258,10.74154 165.81258,9.7915888 C165.81258,7.7860346 165.5782,5.7708673 165.10945,3.7460871 C165.66206,3.5847721 166.21303,3.4229984 166.76234,3.260766 z M173.28865,3.1470575 C174.33601,3.9765253 175.33577,4.7958307 176.28792,5.6049738 C173.88557,7.7423639 172.6844,9.8234501 172.6844,11.848229 C172.6844,13.066796 173.04539,14.068749 173.76738,14.854089 C174.63347,15.546227 175.60255,16.029442 176.67464,16.303734 L176.67464,16.664635 C173.22237,16.161644 171.10988,14.751092 170.33717,12.432977 C170.14418,11.840264 170.04768,11.246911 170.04768,10.652917 C170.04768,8.6001225 171.12801,6.0981684 173.28865,3.1470575 z M173.79182,3.0943232 C177.2538,3.6006107 179.38258,5.0471439 180.17818,7.4339228 C180.36201,7.973352 180.45393,8.5365849 180.45393,9.12362 C180.45393,11.17257 179.37105,13.668664 177.20528,16.6119 C176.81032,16.337059 176.30183,15.94732 175.67982,15.442681 C175.05782,14.938043 174.56911,14.508477 174.2137,14.153985 C176.59261,12.036553 177.78206,9.9613276 177.78206,7.9283075 C177.78206,6.7145014 177.31917,5.6355524 176.39339,4.6914606 C175.73586,4.1443424 174.88744,3.7378483 173.84813,3.4719782 z M182.14647,2.8833857 C183.95592,3.5775385 185.68919,3.9475946 187.3463,3.9935541 C189.01036,4.0400629 190.74959,3.9102411 192.56398,3.6040888 L192.56398,3.898797 C190.96474,4.7597589 189.4413,5.3907404 187.99367,5.7917414 C187.99367,6.1145563 187.99367,6.4751825 187.99367,6.87362 C187.99367,10.162377 187.29897,13.437768 185.90956,16.699791 L185.55031,16.699791 C185.74953,14.668786 185.80318,12.91784 185.71126,11.446954 C185.59334,9.7241154 185.23116,8.047327 184.62471,6.4165888 C183.97926,6.49862 183.28584,6.5396357 182.54445,6.5396357 C182.13869,6.5396357 181.68752,6.5236139 181.19093,6.4915705 C181.34492,5.7776423 181.49324,5.1628656 181.63588,4.6472406 z M199.29916,2.0747919 L199.8688,3.9441156 C200.02463,4.4895868 200.19757,5.1153498 200.38763,5.8214045 C199.09033,6.2885065 197.84814,6.5220575 196.66107,6.5220575 C195.87738,6.5220575 195.18597,6.4283075 194.58685,6.2408075 C194.75092,7.1980829 194.83295,8.1180058 194.83295,9.0005732 L199.73724,7.6822138 L199.10059,11.356042 L194.78049,10.389245 C194.69534,11.653222 194.46088,12.901269 194.07709,14.133386 C195.38043,13.195886 196.83942,12.727136 198.45404,12.727136 C199.07312,12.727136 199.75867,12.812188 200.51068,12.982293 C200.39148,13.885186 200.19354,15.177087 199.91687,16.857994 C198.20923,15.744714 196.48529,15.188073 194.74506,15.188073 C194.35504,15.188073 193.97597,15.217278 193.60783,15.275689 C193.2397,15.3341 192.83948,15.404504 192.40717,15.486901 L192.40717,15.196862 C192.70599,14.925134 193.03476,14.667871 193.39346,14.425073 C193.42734,12.854211 193.28378,11.389001 192.9628,10.029443 L192.35443,9.9003534 L192.35443,9.6061945 L192.8642,9.4762812 C192.56592,8.4627934 192.13818,7.3398066 191.58099,6.1073236 C191.91644,5.9278803 192.32074,5.7694025 192.79388,5.6318903 C192.29053,5.515069 191.74561,5.2700739 191.15912,4.8969049 L191.15912,4.6060419 C191.62238,4.6411982 192.03253,4.6587763 192.38959,4.6587763 C194.85492,4.6587763 197.15811,3.7974482 199.29916,2.0747919 z M211.71541,2.8658075 C211.78023,3.2970219 211.81264,3.6661625 211.81264,3.9732294 C211.81264,5.7535639 211.06218,7.3941889 209.56126,8.8951044 L209.28139,8.8951044 C209.49379,8.1646976 209.6227,7.4989252 209.66811,6.89779 C209.71498,6.3098383 209.65904,5.7334223 209.50029,5.1685419 C207.95689,5.2604609 206.4894,5.736352 205.09779,6.5962152 C207.85023,7.6829462 210.06508,9.674036 211.74232,12.569482 C211.48799,12.783166 211.14815,13.032922 210.72279,13.318749 C210.92641,14.047326 211.10805,14.688012 211.26772,15.240808 C210.06142,15.662683 208.90126,15.87362 207.78725,15.87362 C206.75691,15.87362 205.82527,15.703698 204.99232,15.363854 C205.03792,15.351586 205.11995,15.521508 205.23842,15.87362 L202.15538,15.87362 C202.13652,15.588891 202.12709,15.360375 202.12709,15.188073 C202.12709,13.224816 202.98457,11.50216 204.69954,10.020104 L204.99232,10.020104 C204.61732,11.035424 204.42982,11.931909 204.42982,12.709558 C204.42982,13.20321 204.48988,13.660241 204.61,14.080651 C205.60719,14.013635 206.56081,13.771844 207.47084,13.355279 C206.82521,11.237298 205.75294,9.3078241 204.25404,7.5668573 C203.72762,7.133996 203.04207,6.599328 202.1974,5.9628534 L202.1974,5.6783075 L203.33998,5.9595575 C203.23817,5.7932978 203.1404,5.540246 203.04665,5.2004023 L202.7599,4.0385981 C203.95943,3.6083012 205.11372,3.3931522 206.22279,3.3931513 C207.27309,3.3931522 208.23988,3.5689335 209.12318,3.920495 C208.95033,3.7231083 208.79799,3.4563236 208.66615,3.120141 C209.06093,3.0827885 209.5576,3.0376987 210.15617,2.9848719 C210.75475,2.9320469 211.27449,2.8923588 211.71541,2.8658075 z" Fill="Black" HorizontalAlignment="Left" Height="16.278" Margin="10.789,4.941,0,3.781" RenderTransformOrigin="0.5,0.5" Stretch="Fill" VerticalAlignment="Center" Width="211.024">
+                <Path.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Path.RenderTransform>
+            </Path>
+            <Grid x:Name="Header" Margin="0" MouseLeftButtonDown="Header_MouseLeftButtonDown" Background="#00000000" FlowDirection="RightToLeft">
+                <Button x:Name="button" Content="X" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" Padding="5,1" Background="#00F0FF5D" FontWeight="Bold" Click="Button_Click" Height="30" Style="{DynamicResource btn_close_style}" Width="30" FontSize="16"/>
+                <Grid Width="30" Height="30" HorizontalAlignment="Left" Margin="40,0,0,0" Background="#00000000">
+                    <local:ButtonPin x:Name="btn_pin" Margin="0,1" Padding="0,3,0,2"/>
+                    <Button x:Name="btn_toggle" Content="" HorizontalAlignment="Left" Width="30" Background="{x:Null}" Foreground="{x:Null}" Click="toggleTop_Click" Height="30" VerticalAlignment="Bottom" Padding="1" Style="{DynamicResource btn_empty_style}"/>
+
+                </Grid>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1">
+            <RichTextBox x:Name="rich_txtbox" FontSize="16" UndoLimit="2100000000" VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" Block.LineHeight="6" SpellCheck.IsEnabled="True" AcceptsTab="True" IsDocumentEnabled="True" BorderBrush="#7FBCCBFF" SelectionBrush="#FF728BFF">
+                <RichTextBox.Background>
+                    <RadialGradientBrush>
+                        <GradientStop Color="#CCC7D4FF" Offset="0"/>
+                        <GradientStop Color="#CCBCCBFF" Offset="1"/>
+                    </RadialGradientBrush>
+                </RichTextBox.Background>
+                <FlowDocument LineHeight="1" PagePadding="5" IsOptimalParagraphEnabled="True" IsHyphenationEnabled="True"/>
+            </RichTextBox>
+        </Grid>
+
+    </Grid>
+</Window>
