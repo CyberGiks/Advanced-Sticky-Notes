@@ -31,6 +31,17 @@ namespace ASN
         private void Header_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();
+            if (e.ChangedButton == MouseButton.Left && e.ClickCount == 2)
+            {
+                if(WindowState == WindowState.Normal)
+                {
+                    WindowState = WindowState.Maximized;
+                }
+                else
+                {
+                    WindowState = WindowState.Normal;
+                }
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
