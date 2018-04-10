@@ -4,4 +4,10 @@
 
 Open source replacement for commercial sticky-notes app
 
+### Screenshot
+
+![screenshot](https://i.imgur.com/dcpgKRK.png)
+
+### Download
+
 Download [here](https://ci.appveyor.com/project/gmastergreatee/advanced-sticky-notes/build/artifacts)
