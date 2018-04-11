@@ -21,7 +21,7 @@ namespace ASN
     public partial class MainWindow : Window
     {
         bool isOnTop = false;
-
+        bool ctrlPressed = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -33,7 +33,7 @@ namespace ASN
             this.DragMove();
             if (e.ChangedButton == MouseButton.Left && e.ClickCount == 2)
             {
-                if(WindowState == WindowState.Normal)
+                if (WindowState == WindowState.Normal)
                 {
                     WindowState = WindowState.Maximized;
                 }
@@ -64,6 +64,34 @@ namespace ASN
                 this.Topmost = false;
                 btn_pin.DeActivate();
             }
+        }
+
+        private void rich_txtbox_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (!ctrlPressed)
+                return;
+            var scroll = e.Delta;
+            if (scroll > 0)
+            {
+                rich_txtbox.FontSize++;
+            }
+            else
+            {
+                if (rich_txtbox.FontSize > 5)
+                    rich_txtbox.FontSize--;
+            }
+        }
+
+        private void rich_txtbox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
+                ctrlPressed = true;
+
+        }
+
+        private void rich_txtbox_KeyUp(object sender, KeyEventArgs e)
+        {
+            ctrlPressed = false;
         }
     }
 }

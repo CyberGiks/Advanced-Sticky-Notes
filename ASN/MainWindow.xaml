@@ -184,7 +184,7 @@
             </Grid>
         </Grid>
         <Grid Grid.Row="1">
-            <RichTextBox x:Name="rich_txtbox" FontSize="16" UndoLimit="2100000000" VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" Block.LineHeight="6" SpellCheck.IsEnabled="True" AcceptsTab="True" IsDocumentEnabled="True" BorderBrush="#7FBCCBFF" SelectionBrush="#FF728BFF">
+            <RichTextBox x:Name="rich_txtbox" FontSize="16" UndoLimit="2100000000" VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" Block.LineHeight="6" SpellCheck.IsEnabled="True" AcceptsTab="True" IsDocumentEnabled="True" BorderBrush="#7FBCCBFF" SelectionBrush="#FF728BFF" MouseWheel="rich_txtbox_MouseWheel" KeyDown="rich_txtbox_KeyDown" KeyUp="rich_txtbox_KeyUp">
                 <RichTextBox.Background>
                     <RadialGradientBrush>
                         <GradientStop Color="#CCC7D4FF" Offset="0"/>
