@@ -26,6 +26,7 @@ namespace ASN
         {
             InitializeComponent();
             btn_pin.DeActivate();
+            rich_txtbox.AllowDrop = true;
         }
 
         private void Header_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

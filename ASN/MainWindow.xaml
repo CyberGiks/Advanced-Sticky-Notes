@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ASN"
         mc:Ignorable="d"
-        Title="Advanced Sticky Notes" Height="350" Width="525" ShowInTaskbar="False" Background="{x:Null}" WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResizeWithGrip">
+        Title="Advanced Sticky Notes" Height="350" Width="525" ShowInTaskbar="False" Background="{x:Null}" WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResizeWithGrip" AllowDrop="True">
     <Window.Resources>
         <Storyboard x:Key="hideAnimation">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="grid">
